@@ -125,4 +125,4 @@ def chain_functions(*function_strings):
 
 
 def style_tag_with_css(css):
-    return style(css)
+    return style(raw(css))

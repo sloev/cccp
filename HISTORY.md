@@ -7,3 +7,7 @@
 
 * fix bugs
 * introduce more js snippets
+
+### 0.0.3
+
+* fix css snippet
