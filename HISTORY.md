@@ -15,3 +15,7 @@
 ### 0.0.4
 
 * add xkcd line chart snippet
+
+### 0.0.10
+
+* drop xkcd chart and use chartjs

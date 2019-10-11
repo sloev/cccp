@@ -33,10 +33,9 @@ BOOTSTRAP = [
     ),
 ]
 
-CHARTXKCD = script(
-    src="https://cdn.jsdelivr.net/npm/chart.xkcd@1/dist/chart.xkcd.min.js"
+CHARTJS = script(
+    src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"
 )
-
 
 
 def render(x):
@@ -140,14 +139,13 @@ def chain_functions(*function_strings):
 def style_tag_with_css(css):
     return style(raw(css))
 
-class ChartXKCD(JavaScript):
-    js_source = """
-        const svg$$id = document.querySelector('.$$id')
 
-        const lineChart$$id = new chartXkcd.Line(svg$$id, {
-            title: '$$title',
-            xLabel: '$$xtitle',
-            yLabel: '$$ytitle',
+class LineChart(JavaScript):
+    js_source = """
+        const canvas$$id = $('#$$id')
+
+        const lineChart$$id = new Chart(canvas$$id, {
+            type: "line",
             data: {
             labels: $$xlabels,
             datasets: $$datasets
@@ -156,22 +154,6 @@ class ChartXKCD(JavaScript):
         });
     """
 
-def chart_xkcd(id, title, xtitle, ytitle, xlabels, datasets):
-    '''
-    id: svg class id
-    datasets: [{
-        label: 'Plan',
-        data: [30, 70, 200, 300, 500 ,800, 1500, 2900, 5000, 8000],
-      }, {
-        label: 'Reality',
-        data: [0, 1, 30, 70, 80, 100, 50, 80, 40, 150],
-    }]
-    '''
-    return ChartXKCD(
-        id=id,
-        title=title,
-        xtitle=xtitle,
-        ytitle=ytitle,
-        xlabels=json.dumps(xlabels),
-        datasets=json.dumps(datasets)
-    )
+
+def line_chart(id, xlabels, datasets):
+    return LineChart(id=id, xlabels=json.dumps(xlabels), datasets=json.dumps(datasets))
