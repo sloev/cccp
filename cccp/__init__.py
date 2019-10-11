@@ -1,7 +1,7 @@
 from string import Template
 from dominate.tags import script, link, style
 from dominate.util import raw
-
+import json
 
 REQUIRED = [
     script(
@@ -32,6 +32,11 @@ BOOTSTRAP = [
         crossorigin="anonymous",
     ),
 ]
+
+CHARTXKCD = script(
+    src="https://cdn.jsdelivr.net/npm/chart.xkcd@1/dist/chart.xkcd.min.js"
+)
+
 
 
 def render(x):
@@ -116,6 +121,14 @@ class CreateRemoveHtmlFunc(JavaScript):
     """
 
 
+class CreateSetAttributeFunction(JavaScript):
+    js_source = """
+    function SetAttribute(id, attribute, value){
+        $("#"+id).attr(attribute, value)
+    };
+    """
+
+
 def removeHtml(id):
     return f"RemoveHtml('{id}')"
 
@@ -126,3 +139,39 @@ def chain_functions(*function_strings):
 
 def style_tag_with_css(css):
     return style(raw(css))
+
+class ChartXKCD(JavaScript):
+    js_source = """
+        const svg = document.querySelector('$$id')
+
+        new chartXkcd.Line(svg, {
+            title: '$$title',
+            xLabel: '$$xtitle',
+            yLabel: '$$ytitle',
+            data: {
+            labels: $$xlabels,
+            datasets: $$datasets
+            },
+            options: {}
+        });
+    """
+
+def chart_xkcd(id, title, xtitle, ytitle, xlabels, datasets):
+    '''
+    id: svg class id
+    datasets: [{
+        label: 'Plan',
+        data: [30, 70, 200, 300, 500 ,800, 1500, 2900, 5000, 8000],
+      }, {
+        label: 'Reality',
+        data: [0, 1, 30, 70, 80, 100, 50, 80, 40, 150],
+    }]
+    '''
+    return ChartXKCD(
+        id=id,
+        title=title,
+        xtitle=xtitle,
+        ytitle=ytitle,
+        xlabels=xlabels,
+        datasets=json.dumps(datasets)
+    )

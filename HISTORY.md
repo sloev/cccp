@@ -11,3 +11,7 @@
 ### 0.0.3
 
 * fix css snippet
+
+### 0.0.4
+
+* add xkcd line chart snippet
