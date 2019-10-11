@@ -150,10 +150,10 @@ class LineChart(JavaScript):
             labels: $$xlabels,
             datasets: $$datasets
             },
-            options: {}
+            options: $$options
         });
     """
 
 
-def line_chart(id, xlabels, datasets):
-    return LineChart(id=id, xlabels=json.dumps(xlabels), datasets=json.dumps(datasets))
+def line_chart(id, xlabels, datasets, options):
+    return LineChart(id=id, xlabels=json.dumps(xlabels), datasets=json.dumps(datasets), options=json.dumps(options or {}))

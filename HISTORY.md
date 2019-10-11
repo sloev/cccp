@@ -19,3 +19,8 @@
 ### 0.0.10
 
 * drop xkcd chart and use chartjs
+
+### 0.0.11
+
+* line chart take options
+
