@@ -144,7 +144,7 @@ class ChartXKCD(JavaScript):
     js_source = """
         const svg$$id = document.querySelector('.$$id')
 
-        new chartXkcd.Line(svg$$id, {
+        const lineChart$$id = new chartXkcd.Line(svg$$id, {
             title: '$$title',
             xLabel: '$$xtitle',
             yLabel: '$$ytitle',
