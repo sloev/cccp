@@ -142,9 +142,9 @@ def style_tag_with_css(css):
 
 class ChartXKCD(JavaScript):
     js_source = """
-        const svg = document.querySelector('$$id')
+        const svg$$id = document.querySelector('.$$id')
 
-        new chartXkcd.Line(svg, {
+        new chartXkcd.Line(svg$$id, {
             title: '$$title',
             xLabel: '$$xtitle',
             yLabel: '$$ytitle',
