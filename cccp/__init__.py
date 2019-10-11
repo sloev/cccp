@@ -172,6 +172,6 @@ def chart_xkcd(id, title, xtitle, ytitle, xlabels, datasets):
         title=title,
         xtitle=xtitle,
         ytitle=ytitle,
-        xlabels=xlabels,
+        xlabels=json.dumps(xlabels),
         datasets=json.dumps(datasets)
     )
