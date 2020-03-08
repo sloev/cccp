@@ -9,7 +9,7 @@ readme = open("README.md", "r").read()
 
 history = open("HISTORY.md").read()
 
-requirements = ["dominate==2.4.0"]
+requirements = ["dominate>=2.4.0"]
 
 metadata = {}
 version_filename = os.path.join(os.path.dirname(__file__), "cccp", "__version__.py")
