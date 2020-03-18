@@ -1,10 +1,10 @@
+import flask
 from flask import Flask
-from flask_cors import CORS
 import dominate.tags as t
 import cccp
+import os
 
 app = Flask(__name__)
-CORS(app)
 
 
 @app.route("/")
@@ -15,7 +15,8 @@ def home():
                 [
                     cccp.REQUIRED,
                     cccp.BOOTSTRAP,
-                    cccp.CreateReplaceHtmlFunc(),
+                    cccp.CreateReplaceInnerHtmlFunc(),
+                    cccp.CreateReplaceOuterHtmlFunc(),
                     cccp.CreateAppendHtmlFunc(),
                     cccp.CreatePrependHtmlFunc(),
                 ]
@@ -27,56 +28,80 @@ def home():
                     t.button(
                         "go to blog",
                         onClick=cccp.replaceHtml(
-                            "http://127.0.0.1:9999/page/1", "pageContent"
+                            "/page/1", "pageContent"
                         ),
                     ),
-                ]
+                ], id="wholePage"
             ),
         ]
     ).render()
 
+def mostargs():
+    return repr(dict(flask.request.args))
+
 
 @app.route("/append-page")
 def append():
-    content = f"this is appended"
+    a = repr({"l": flask.request.args.getlist("l[]")})
+    content = f"append called with {a}"
     return cccp.render([t.p(content)])
 
 
 @app.route("/prepend-page")
 def prepend():
-    content = f"this is prepended"
+    a = mostargs()
+    content = f"prepend called with {a}"
     return cccp.render([t.p(content)])
+
+
+@app.route("/goodbye")
+def goodbye():
+    with t.body() as body:
+        t.h1("Goodbye, CCCP!"),
+        t.div("reload page to start again"),
+    return body.render()
 
 
 @app.route("/page/<page_id>")
 def page(page_id):
     page_id = int(page_id)
-    content = f"this is page {page_id}"
+    a = mostargs()
+    content = f"{page_id} called with {a}"
     return cccp.render(
         [
             t.p(content),
             t.button(
                 f"replace with page {page_id-1}",
                 onClick=cccp.replaceHtml(
-                    f"http://127.0.0.1:9999/page/{page_id-1}", "pageContent"
+                    f"/page/{page_id-1}", "pageContent",
+                    hello="world"
                 ),
             ),
             t.button(
                 f"replace with page {page_id+1}",
                 onClick=cccp.replaceHtml(
-                    f"http://127.0.0.1:9999/page/{page_id+1}", "pageContent"
+                    f"/page/{page_id+1}", "pageContent"
                 ),
             ),
             t.button(
                 "append page",
                 onClick=cccp.appendHtml(
-                    f"http://127.0.0.1:9999/append-page", "pageContent"
+                    f"/append-page", "pageContent",
+                    l=["1","2","3","4","5"],
                 ),
             ),
             t.button(
                 "prepend page",
                 onClick=cccp.prependHtml(
-                    f"http://127.0.0.1:9999/prepend-page", "pageContent"
+                    f"/prepend-page", "pageContent",
+                    more={"hello":"world"}
+                ),
+            ),
+            t.button(
+                # replaces whole page
+                "Goodbye",
+                onClick=cccp.replaceOuterHtml(
+                    f"/goodbye", "wholePage",
                 ),
             ),
         ]
@@ -84,4 +109,7 @@ def page(page_id):
 
 
 if __name__ == "__main__":
-    app.run(port=9999, debug=True)
+    import os
+    app.run(
+        host=os.environ.get("HOST", "127.0.0.1"),
+                            port=9999, debug=True)
