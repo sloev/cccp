@@ -67,10 +67,26 @@ class JavaScript:
         return inst.render(values, with_script_tag)
 
 
-class CreateReplaceHtmlFunc(JavaScript):
+class CreateReplaceOuterHtmlFunc(JavaScript):
     js_source = """
-    function ReplaceHtml(url, id){
-        axios.get(url)
+    function ReplaceOuterHtml(url, id, params){
+        axios.get(url, {params: params === undefined ? {} : params})
+        .then(function (response) {
+            document.getElementById(id).outerHTML = response.data;
+        });
+    };
+    """
+
+
+def replaceOuterHtml(url, id, **kwargs):
+    params = json.dumps(kwargs)
+    return f"ReplaceOuterHtml('{url}', '{id}', {params})"
+
+
+class CreateReplaceInnerHtmlFunc(JavaScript):
+    js_source = """
+    function ReplaceInnerHtml(url, id, params){
+        axios.get(url, {params: params === undefined ? {} : params})
         .then(function (response) {
             document.getElementById(id).innerHTML = response.data;
         });
@@ -78,14 +94,19 @@ class CreateReplaceHtmlFunc(JavaScript):
     """
 
 
-def replaceHtml(url, id):
-    return f"ReplaceHtml('{url}', '{id}')"
+def replaceInnerHtml(url, id, **kwargs):
+    params = json.dumps(kwargs)
+    return f"ReplaceInnerHtml('{url}', '{id}', {params})"
+
+
+# backwards compatibility
+replaceHtml = replaceInnerHtml
 
 
 class CreateAppendHtmlFunc(JavaScript):
     js_source = """
-    function AppendHtml(url, id){
-        axios.get(url)
+    function AppendHtml(url, id, params){
+        axios.get(url, {params: params === undefined ? {} : params})
         .then( function (response) {
             $("#"+id).append(response.data);
         });
@@ -93,14 +114,15 @@ class CreateAppendHtmlFunc(JavaScript):
     """
 
 
-def appendHtml(url, id):
-    return f"AppendHtml('{url}', '{id}')"
+def appendHtml(url, id, **kwargs):
+    params = json.dumps(kwargs)
+    return f"AppendHtml('{url}', '{id}', {params})"
 
 
 class CreatePrependHtmlFunc(JavaScript):
     js_source = """
-    function PrependHtml(url, id){
-        axios.get(url)
+    function PrependHtml(url, id, params){
+        axios.get(url, {params: params === undefined ? {} : params})
         .then( function(response) {
             $("#"+id).prepend(response.data);
         });
@@ -108,8 +130,9 @@ class CreatePrependHtmlFunc(JavaScript):
     """
 
 
-def prependHtml(url, id):
-    return f"PrependHtml('{url}', '{id}')"
+def prependHtml(url, id, **kwargs):
+    params = json.dumps(kwargs)
+    return f"PrependHtml('{url}', '{id}', {params})"
 
 
 class CreateRemoveHtmlFunc(JavaScript):

@@ -24,3 +24,6 @@
 
 * line chart take options
 
+### 0.0.12
+
+* kwargs as get-args
