@@ -2,6 +2,8 @@
 
 # CCCP - Semi Server Side Rendered ☭
 
+<a href="https://www.buymeacoffee.com/sloev" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-pink.png" alt="Buy Me A Coffee" height="51px" width="217px"></a>
+
 CCCP uses [dominate](https://github.com/Knio/dominate) for generation of HTML in Python but **extends it with JavaScript snippets**
 
 Includes:
